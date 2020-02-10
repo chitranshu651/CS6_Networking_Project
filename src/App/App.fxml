@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Circle?>
+
+
+<AnchorPane prefHeight="625.0" prefWidth="910.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="App.App_Controller">
+   <children>
+      <JFXListView fx:id="list" layoutY="100.0" prefHeight="528.0" prefWidth="285.0" style="-fx-background-color: grey;" />
+      <JFXTextArea fx:id="text" layoutX="285.0" layoutY="561.0" prefHeight="66.0" prefWidth="511.0" style="-fx-background-color: white;" />
+      <JFXButton layoutX="796.0" layoutY="561.0" onAction="#send" prefHeight="66.0" prefWidth="114.0" style="-fx-background-color: #21ed9c;" text=" ">
+         <graphic>
+            <FontAwesomeIconView glyphName="SEND" size="30" />
+         </graphic>
+      </JFXButton>
+      <AnchorPane layoutX="285.0" layoutY="34.0" prefHeight="99.0" prefWidth="625.0" style="-fx-background-color: white;">
+         <children>
+            <Label fx:id="name" layoutX="25.0" layoutY="14.0" prefHeight="38.0" prefWidth="211.0" text="Name" />
+            <Label fx:id="username" layoutX="26.0" layoutY="64.0" prefHeight="21.0" prefWidth="122.0" text="username" />
+            <JFXButton layoutX="524.0" layoutY="35.0" onAction="#refresh" prefHeight="31.0" prefWidth="40.0" style="-fx-background-color: #21ed9c;" text=" ">
+               <graphic>
+                  <FontAwesomeIconView disable="true" glyphName="REFRESH" size="24" />
+               </graphic>
+            </JFXButton>
+         </children>
+      </AnchorPane>
+      <JFXTextField fx:id="search" layoutY="52.0" onKeyReleased="#search" prefHeight="49.0" prefWidth="285.0" promptText="Search" style="-fx-background-color: white;" />
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-2.0" layoutY="2.0" prefHeight="49.0" prefWidth="285.0" text="Chatline" textAlignment="CENTER" textFill="#02f594" />
+      <JFXListView fx:id="display" layoutX="285.0" layoutY="133.0" prefHeight="428.0" prefWidth="625.0" />
+      <HBox alignment="TOP_RIGHT" layoutX="770.0" layoutY="9.0" prefHeight="35.0" prefWidth="128.0" spacing="20.0">
+         <children>
+            <Circle fill="#d7eb00" onMouseClicked="#minimize" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+            <Circle fill="#ee0000" onMouseClicked="#close" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

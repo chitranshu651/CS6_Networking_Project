@@ -3,6 +3,7 @@ package Server_Client;
 import Login_Signup.User;
 import Misc.PasswordUtils;
 
+
 import java.io.*;
 import java.net.Socket;
 import java.security.spec.InvalidKeySpecException;
@@ -52,6 +53,18 @@ public class clientHandler implements Runnable {
                         break;
                     case "Signup":
                         dataOutput.writeBoolean(Signup());
+                        break;
+                    case "GetMessages":
+                        // TODO GetMessages
+                        break;
+                    case "GetProfile":
+                        // TODO GetProfile
+                        break;
+                    case "Search":
+                        // TODO Search
+                        break;
+                    case "SendMessage":
+                        // TODO SendMessage
                         break;
                 }
             } catch (Exception e) {

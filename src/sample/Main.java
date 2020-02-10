@@ -21,6 +21,10 @@ public class Main extends Application {
     }
 
 
+    public void stop(){
+        user.sendString("Exit");
+
+    }
     public static void main(String[] args) {
         launch(args);
     }

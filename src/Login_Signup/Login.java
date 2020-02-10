@@ -56,7 +56,7 @@ public class Login {
         if (login) {
             System.out.println("Login Successful");
             SessionInfo.setUsername(username);
-            changer.changeScene("../App/Chat.fxml", click, "Hi");
+            changer.changeScene("../App/App.fxml", click, "Hi");
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Username Password didn't match");
             alert.showAndWait();
