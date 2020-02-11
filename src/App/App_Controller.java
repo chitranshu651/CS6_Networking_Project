@@ -5,6 +5,7 @@ import Misc.SessionInfo;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXTextArea;
 import com.jfoenix.controls.JFXTextField;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -70,6 +71,26 @@ public class App_Controller {
                 display.setItems(FXCollections.observableArrayList(todisplay));
             }
     });
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Runnable updater = new Runnable() {
+                    @Override
+                    public void run() {
+                        refresh();
+                    }
+                };
+                while (true) {
+                    try {
+                        Thread.sleep(3000);
+                    } catch (InterruptedException ex) {
+                    }
+                    Platform.runLater(updater);
+                }
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
     }
 
 
@@ -86,7 +107,10 @@ public class App_Controller {
     }
 
     @FXML
-    void refresh(ActionEvent event) {
+    void refresh() {
+        if(username.getText().equals("username")){
+            return;
+        }
         Main.user.sendString("GetMessages");
         Main.user.sendString(Misc.SessionInfo.getUsername());
         Main.user.sendString(username.getText());
@@ -133,7 +157,7 @@ public class App_Controller {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        text.setText("");
     }
 
 }
