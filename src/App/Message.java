@@ -1,8 +1,9 @@
 package App;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Message {
+public class Message  implements Serializable {
     private String sender;
     private String reciever;
     private int type;

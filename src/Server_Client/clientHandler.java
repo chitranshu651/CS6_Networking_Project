@@ -1,5 +1,6 @@
 package Server_Client;
 
+import App.Message;
 import Login_Signup.User;
 import Misc.PasswordUtils;
 
@@ -7,10 +8,8 @@ import Misc.PasswordUtils;
 import java.io.*;
 import java.net.Socket;
 import java.security.spec.InvalidKeySpecException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.util.ArrayList;
 
 
 public class clientHandler implements Runnable {
@@ -56,16 +55,22 @@ public class clientHandler implements Runnable {
                         break;
                     case "GetMessages":
                         // TODO GetMessages
+                        ObjectOutput.writeObject(GetMessage());
                         break;
                     case "GetProfile":
                         // TODO GetProfile
+                        ObjectOutput.writeObject(GetProfile());
                         break;
                     case "Search":
                         // TODO Search
+                        ObjectOutput.writeObject(Search());
                         break;
                     case "SendMessage":
                         // TODO SendMessage
+                        SendMessage();
                         break;
+                    case "GetUsers":
+                        ObjectOutput.writeObject(GetUsers());
                 }
             } catch (Exception e) {
                 System.out.println(e);
@@ -82,6 +87,109 @@ public class clientHandler implements Runnable {
         } catch (IOException e) {
             System.out.println(e);
         }
+    }
+
+    private ArrayList<User> GetUsers() {
+        ArrayList<User> names = new ArrayList<User>();
+        try{
+            String sql = "SELECT `First`,`Last`,`Username`,`Email` FROM `user`;";
+
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                String first = rs.getString("First");
+                String last = rs.getString("Last");
+                String email = rs.getString("Email");
+                String username = rs.getString("Username");
+                User user1 = new User(first, last, email, username, "", "");
+                names.add(user1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return names;
+    }
+
+    private void SendMessage() throws IOException, ClassNotFoundException {
+        Message message = (Message) ObjectInput.readObject();
+        String sql = "INSERT INTO messages values(NULL,\"" + message.getSender() + "\",\"" + message.getReciever() + "\",\"" + message.getText() + "\",\"" + message.getTime() + "\");";
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ArrayList<User> Search() {
+        ArrayList<User> names = new ArrayList<User>();
+        try {
+            String user = dataInput.readUTF();
+            String current = dataInput.readUTF();
+            String sql = "SELECT `First`,`Last`,`Username`,`Email` FROM `user` WHERE `Username` LIKE \'" + user + "%\' and Username!= \"" + current + "\";";
+
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                String first = rs.getString("First");
+                String last = rs.getString("Last");
+                String email = rs.getString("Email");
+                String username = rs.getString("Username");
+                User user1 = new User(first, last, email, username, "", "");
+                names.add(user1);
+            }
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Search done");
+        return names;
+
+    }
+
+
+    private User GetProfile() {
+        try {
+            String user = dataInput.readUTF();
+            String sql = "SELECT * from user where `Username`=\"" + user + "\";";
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                String first = rs.getString("First");
+                String last = rs.getString("Last");
+                String email = rs.getString("Email");
+                String username = rs.getString("Username");
+                User user1 = new User(first, last, email, username, "", "");
+                System.out.println(System.getProperty("user.dir"));
+                return user1;
+            }
+        } catch (IOException | SQLException e) {
+            System.out.println(e);
+        }
+
+        return null;
+    }
+
+
+    private ArrayList<Message> GetMessage() {
+        ArrayList<Message> messages = new ArrayList<>();
+        try {
+            String user1 = dataInput.readUTF();
+            String user2 = dataInput.readUTF();
+            String sql = "select * from messages where reciever=\"" + user1 + "\" and  sender=\"" + user2 + "\" or reciever=\"" + user2 + "\" and sender=\"" + user1 + "\" order by time limit 100;";
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            while (rs.next()) {
+                Message message = new Message();
+                message.setText(rs.getString("message"));
+                message.setReciever(rs.getString("reciever"));
+                message.setSender(rs.getString("sender"));
+                message.setTime(rs.getTimestamp("time"));
+                messages.add(message);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return messages;
     }
 
     private boolean Signup() {

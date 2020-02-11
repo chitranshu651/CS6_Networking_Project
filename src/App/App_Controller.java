@@ -49,10 +49,11 @@ public class App_Controller {
                 add.add(s.getUsername());
             }
         }
+        list.setItems(FXCollections.observableArrayList(add));
         list.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                username.setText(list.getSelectionModel().toString());
+                username.setText(list.getSelectionModel().getSelectedItem().toString());
                 Main.user.sendString("GetProfile");
                 Main.user.sendString(username.getText());
                 User profile = (User) Main.user.recieveObject();
